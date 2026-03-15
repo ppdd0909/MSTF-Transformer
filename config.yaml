@@ -1,0 +1,42 @@
+# MSTF-Transformer — Hyperparameter Configuration
+# mst_opt.py + occformer_opt.py
+
+# ─────────────────────────────────────────
+# Model Architecture
+# ─────────────────────────────────────────
+model:
+  d_model: 128                  # Embedding dimension
+  n_layers: 4                   # Number of SpatioTemporalFusionLayer stacks
+  nhead: 8                      # Multi-head attention heads
+  feedforward_dim: 512          # First linear layer in output_layer
+  dropout: 0.1                  # Applied after encoder layer
+
+# ─────────────────────────────────────────
+# Input Configuration
+# ─────────────────────────────────────────
+input:
+  sequence_length: 20           
+  prediction_mode: single_step  
+  all_input_sizes: [1, 2, 3, 4, 5, 9]
+  modalities:
+    M1_personnel_dynamics:
+      features: [F1]
+      column_index: [4]         # occupant_num
+    M2_environmental_state:
+      features: [F2, F3, F4, F5]
+      column_index: [5, 6, 7, 8] # room_temp1, room_RH1, room_temp2, room_RH2
+    M3_equipment_control:
+      features: [F6, F7, F8, F9]
+      column_index: [0, 1, 2, 3] # FCU_temp_feedback, control_mode, onoff, fan
+
+# ─────────────────────────────────────────
+# Training Configuration
+# ─────────────────────────────────────────
+training:
+  optimizer: AdamW
+  learning_rate: 0.0003        
+  batch_size: 32
+  epochs: 30
+  loss_function: MSELoss
+  random_seed: 42
+
